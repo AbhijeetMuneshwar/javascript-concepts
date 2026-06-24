@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript Interview Concepts</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #111827;
+            --text: #e5e7eb;
+            --muted: #9ca3af;
+            --accent: #38bdf8;
+            --accent2: #34d399;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #f8fafc;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        pre {
+            background: #020617;
+            padding: 14px;
+            border-radius: 10px;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+        }
+
+        code {
+            font-family: Consolas, monospace;
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent);
+            padding: 3px 8px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>JavaScript Interview Concepts with Code Examples</h1>
+            <p>This file covers the most commonly asked JavaScript questions for interviews in 2026, with short
+                explanations and practical examples.</p>
+        </div>
+
+        <div class="card">
+            <h2>1. What is Closure?</h2>
+            <p>A closure is when a function remembers and can access variables from its outer scope even after the outer
+                function has finished executing.</p>
+            <pre><code>function outer() {
+  let count = 0;
+  return function inner() {
+    count++;
+    console.log(count);
+  };
+}
+
+const counter = outer();
+counter(); // 1
+counter(); // 2</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>2. Explain Event Loop</h2>
+            <p>The event loop handles asynchronous tasks by continuously checking the call stack and task queues.</p>
+            <pre><code>console.log("Start");
+
+setTimeout(() => console.log("Timeout"), 0);
+
+Promise.resolve().then(() => console.log("Promise"));
+
+console.log("End");
+// Output: Start -> End -> Promise -> Timeout</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>3. var vs let vs const</h2>
+            <p><code>var</code> is function-scoped and hoisted; <code>let</code> and <code>const</code> are
+                block-scoped.</p>
+            <pre><code>if (true) {
+  var a = 1;
+  let b = 2;
+  const c = 3;
+}
+
+console.log(a); // 1
+// console.log(b); // ReferenceError
+// console.log(c); // ReferenceError</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>4. Promise vs Async/Await</h2>
+            <p>Promises represent asynchronous work; <code>async/await</code> makes asynchronous code look synchronous
+                and easier to read.</p>
+            <pre><code>function fetchData() {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve("Data received"), 1000);
+  });
+}
+
+fetchData().then((data) => console.log(data));
+
+async function getData() {
+  const data = await fetchData();
+  console.log(data);
+}
+
+getData();</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>5. Call vs Apply vs Bind</h2>
+            <p>These methods set the <code>this</code> value for a function. <code>call</code> and <code>apply</code>
+                invoke immediately; <code>bind</code> returns a new function.</p>
+            <pre><code>const person = {
+  name: "Alice",
+  greet(city, country) {
+    console.log(`${this.name} lives in ${city}, ${country}`);
+  }
+};
+
+person.greet.call({ name: "Bob" }, "Paris", "France");
+person.greet.apply({ name: "Charlie" }, ["London", "UK"]);
+const greetBob = person.greet.bind({ name: "Diana" });
+greetBob("Tokyo", "Japan");</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>6. this Keyword</h2>
+            <p>The value of <code>this</code> depends on how a function is called.</p>
+            <pre><code>const obj = {
+  name: "Rahul",
+  show() {
+    console.log(this.name);
+  }
+};
+
+obj.show(); // Rahul
+
+const fn = obj.show;
+fn(); // undefined (in strict mode)</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>7. Event Delegation</h2>
+            <p>Instead of attaching listeners to every child, attach one listener to a parent and handle events from
+                children.</p>
+            <pre><code>document.querySelector("#list").addEventListener("click", (e) => {
+  if (e.target.tagName === "LI") {
+    console.log(e.target.textContent);
+  }
+});</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>8. Debounce vs Throttle</h2>
+            <p>Debounce delays execution until the event stops; throttle limits execution to a fixed interval.</p>
+            <pre><code>function debounce(fn, delay) {
+  let timer;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+
+function throttle(fn, limit) {
+  let inThrottle;
+  return function (...args) {
+    if (!inThrottle) {
+      inThrottle = true;
+      setTimeout(() => {
+        inThrottle = false;
+        fn.apply(this, args);
+      }, limit);
+    }
+  };
+}</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>9. Shallow Copy vs Deep Copy</h2>
+            <p>A shallow copy copies the top level; nested objects are still shared. A deep copy duplicates nested
+                values too.</p>
+            <pre><code>const person = { name: "Asha", address: { city: "Pune" } };
+
+const shallowCopy = { ...person };
+shallowCopy.address.city = "Mumbai";
+console.log(person.address.city); // Mumbai
+
+const deepCopy = JSON.parse(JSON.stringify(person));
+deepCopy.address.city = "Delhi";
+console.log(person.address.city); // Mumbai</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>10. map vs forEach</h2>
+            <p><code>map</code> returns a new array; <code>forEach</code> only iterates and returns
+                <code>undefined</code>.</p>
+            <pre><code>const nums = [1, 2, 3];
+
+const doubled = nums.map(n => n * 2);
+console.log(doubled); // [2, 4, 6]
+
+nums.forEach(n => console.log(n));</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>11. null vs undefined</h2>
+            <p><code>null</code> means “no value” intentionally; <code>undefined</code> means a variable is declared but
+                not assigned yet.</p>
+            <pre><code>let a;
+console.log(a); // undefined
+
+let b = null;
+console.log(b); // null
+
+console.log(a === b); // false</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>12. == vs ===</h2>
+            <p><code>==</code> performs type coercion; <code>===</code> checks both value and type.</p>
+            <pre><code>console.log(1 == "1");  // true
+console.log(1 === "1"); // false</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>13. Hoisting</h2>
+            <p>Hoisting moves declarations to the top of the scope during execution. Initializations stay in place.</p>
+            <pre><code>console.log(x); // undefined
+var x = 10;
+
+console.log(y); // ReferenceError
+let y = 20;</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>14. Scope Chain</h2>
+            <p>JavaScript looks for variables in the current scope, then parent scopes, and so on until it reaches the
+                global scope.</p>
+            <pre><code>let globalVar = "Global";
+
+function outer() {
+  let outerVar = "Outer";
+  function inner() {
+    console.log(globalVar); // Global
+    console.log(outerVar); // Outer
+  }
+  inner();
+}
+
+outer();</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>15. Prototype Inheritance</h2>
+            <p>Objects inherit properties and methods from their prototype chain.</p>
+            <pre><code>const animal = {
+  eats: true
+};
+
+const dog = Object.create(animal);
+dog.barks = true;
+
+console.log(dog.eats); // true</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>16. Promise.all vs Promise.allSettled</h2>
+            <p><code>Promise.all</code> rejects as soon as one promise rejects. <code>Promise.allSettled</code> waits
+                for all and returns their results.</p>
+            <pre><code>Promise.all([
+  Promise.resolve("A"),
+  Promise.reject("B")
+]).catch(err => console.log(err));
+
+Promise.allSettled([
+  Promise.resolve("A"),
+  Promise.reject("B")
+]).then(console.log);</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>17. Microtask vs Macrotask Queue</h2>
+            <p>Microtasks (like promises) run before the next macrotask (like <code>setTimeout</code>).</p>
+            <pre><code>setTimeout(() => console.log("macrotask"), 0);
+Promise.resolve().then(() => console.log("microtask"));
+// Output: microtask -> macrotask</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>18. Memory Leaks in JavaScript</h2>
+            <p>Memory leaks happen when objects stay referenced longer than needed, preventing garbage collection.</p>
+            <pre><code>let largeData = [];
+function leak() {
+  largeData.push(new Array(1000000).fill("x"));
+}
+
+// Avoid keeping unnecessary global references</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>19. Currying</h2>
+            <p>Currying transforms a function that takes multiple arguments into a chain of functions that each take one
+                argument.</p>
+            <pre><code>function curry(a) {
+  return function (b) {
+    return function (c) {
+      return a + b + c;
+    };
+  };
+}
+
+console.log(curry(1)(2)(3)); // 6</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>20. Polyfills</h2>
+            <p>Polyfills add missing functionality to older browsers. Common examples include <code>bind</code>,
+                <code>map</code>, <code>reduce</code>, and <code>debounce</code>.</p>
+            <pre><code>// Polyfill for bind
+if (!Function.prototype.bind) {
+  Function.prototype.bind = function (context, ...args) {
+    const fn = this;
+    return function (...newArgs) {
+      return fn.apply(context, [...args, ...newArgs]);
+    };
+  };
+}
+
+function greet(name) {
+  console.log(`Hello ${name}`);
+}
+
+const bound = greet.bind(null, "Aman");
+bound();</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>Bonus: Common Coding Questions</h2>
+            <p>These are frequently asked in interviews because they test array, string, and object manipulation skills.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>21. Reverse a String</h2>
+            <p>Reversing a string is a common starter question. You can reverse the whole string or reverse each word
+                separately.</p>
+            <pre><code>let str = "I love my india";
+
+function reverse(str) {
+  return str.split("").reverse().join("");
+}
+
+console.log(reverse(str));
+
+let result = str
+  .split(" ")
+  .map(word => word.split("").reverse().join(""))
+  .join(" ");
+
+console.log(result);</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>22. Find Duplicate Elements</h2>
+            <p>Duplicate values can be detected by comparing the current index with the first index of the element.</p>
+            <pre><code>const arr = [1, 2, 3, 2, 4, 1];
+const duplicates = arr.filter((item, index) => arr.indexOf(item) !== index);
+
+console.log(duplicates); // [2, 1]</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>23. Remove Duplicates</h2>
+            <p><code>Set</code> is the easiest way to remove duplicate values from an array.</p>
+            <pre><code>const arr = [1, 2, 3, 2, 4, 1];
+const unique = [...new Set(arr)];
+
+console.log(unique); // [1, 2, 3, 4]</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>24. Find Maximum Number</h2>
+            <p>This shows how to iterate through an array and track the highest value found.</p>
+            <pre><code>const numbers = [5, 10, 15, 20, 8];
+let max = numbers[0];
+
+for (let i = 0; i < numbers.length; i++) {
+  if (numbers[i] > max) {
+    max = numbers[i];
+  }
+}
+
+console.log(max); // 20</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>25. Count Character Occurrences</h2>
+            <p>You can count a single character or count all characters in a string using loops or objects.</p>
+            <pre><code>const str = "javascript";
+const char = "a";
+let count = 0;
+
+for (let i = 0; i < str.length; i++) {
+  if (str[i] === char) {
+    count++;
+  }
+}
+
+console.log(count); // 2
+
+const result = {};
+for (const ch of str) {
+  result[ch] = (result[ch] || 0) + 1;
+}
+
+console.log(result);</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>26. Palindrome Check</h2>
+            <p>A palindrome reads the same forward and backward. This solution compares a string with its reversed
+                version.</p>
+            <pre><code>function isPalindrome(str) {
+  return str === str.split("").reverse().join("");
+}
+
+console.log(isPalindrome("madam")); // true
+console.log(isPalindrome("hello")); // false</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>27. Flatten a Nested Array</h2>
+            <p>Flattening converts a deeply nested array into a single-level array.</p>
+            <pre><code>const arr = [1, [2, 3], [4, [5, 6]], 7];
+const flattened = arr.flat(Infinity);
+
+console.log(flattened); // [1, 2, 3, 4, 5, 6, 7]
+
+function flatten(arr) {
+  return arr.reduce((acc, curr) => {
+    return acc.concat(Array.isArray(curr) ? flatten(curr) : curr);
+  }, []);
+}
+
+console.log(flatten([1, [2, [3, [4]], 5]]));</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>28. Group Array by Property</h2>
+            <p>Grouping arrays by a key is useful for dashboards, reports, and data transformation.</p>
+            <pre><code>const users = [
+  { name: "John", department: "IT" },
+  { name: "Jane", department: "HR" },
+  { name: "Mike", department: "IT" },
+  { name: "Sara", department: "HR" }
+];
+
+const grouped = users.reduce((acc, user) => {
+  const key = user.department;
+  if (!acc[key]) {
+    acc[key] = [];
+  }
+  acc[key].push(user);
+  return acc;
+}, {});
+
+console.log(grouped);</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>29. Sum Total Income</h2>
+            <p><code>reduce</code> is often used to compute totals from an array of objects.</p>
+            <pre><code>const users = [
+  { name: "John", income: 5000 },
+  { name: "Jane", income: 7000 },
+  { name: "Mike", income: 6000 }
+];
+
+const totalIncome = users.reduce((total, user) => total + user.income, 0);
+console.log(totalIncome); // 18000</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>30. Dynamic Property Access</h2>
+            <p>This pattern lets you access nested object values using a string path.</p>
+            <pre><code>const user = {
+  name: "John",
+  address: {
+    city: "Pune",
+    state: "Maharashtra"
+  }
+};
+
+function getNestedValue(obj, path) {
+  return path.split(".").reduce((acc, key) => acc?.[key], obj);
+}
+
+console.log(getNestedValue(user, "address.city")); // Pune
+console.log(getNestedValue(user, "address.state")); // Maharashtra</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>31. Prime Number Check</h2>
+            <p>A prime number is divisible only by 1 and itself. This example prints all prime numbers up to 50.</p>
+            <pre><code>for (let num = 2; num < 50; num++) {
+  let prime = true;
+
+  for (let i = 2; i < num; i++) {
+    if (num % i === 0) {
+      prime = false;
+      break;
+    }
+  }
+
+  if (prime) {
+    console.log(num);
+  }
+}</code></pre>
+        </div>
+    </div>
+</body>
+
+</html>
